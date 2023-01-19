@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: Test
+  description: Test
+paths:
+  /pikachu:
+    post:
+      tags:
+        - Pikachu
+      summary: Create a pikachu
+      description: Create a pikachu
+      operationId: createPikachu
+      requestBody:
+        description: Create a pikachu
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pikachu'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                title: PikachuResponse
+                oneOf:
+                  - $ref: '#/components/schemas/Pikachu'
+                  - $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Pikachu not created. Exception encountered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - Pikachu
+      summary: Find all pikachu
+      description: Find all pikachus
+      operationId: findPikachus
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                title: PikachuListResponse
+                oneOf:
+                  - $ref: '#/components/schemas/PikachuList'
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /pikachu{pikachuId}:
+    get:
+      tags:
+        - Pikachu
+      summary: Find pikachus by Id
+      description: Find pikachu by Id
+      operationId: findPikachusById
+      parameters:
+        - name: pikachuId
+          in: path
+          description: Id of pikachus to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                title: PikachuResponse
+                oneOf:
+                  - $ref: '#/components/schemas/Pikachu'
+                  - $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Invalid request data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Pikachu not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    FeatureType:
+      type: string
+      enum: [PSYCHIC, NORMAL,BUG, FIGHTING, WATER, POISON, ELECTRIC, FIRE, ROCK, GHOST]
+    Pikachu:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Ekans
+        age:
+          type: integer
+          format: int64
+          example: 10
+        url:
+          type: string
+          example: www.ekans.com
+    PikachuList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Pikachu'
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          example: 400
+        appId:
+          type: string
+          example: EMS-S2
+        dateTime:
+          type: string
+          example: 2022-11-29T18:34:39.793+00:00
+        message:
+          type: string
+          example: Sample error message.
+
